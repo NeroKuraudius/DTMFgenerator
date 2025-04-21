@@ -2,8 +2,8 @@ const DTMFfreqs = require('../DTMFdata.json')
 
 const tone = require('tonegenerator')
 
-const baseRate = 44100
-const toneDuration = 0.5
+const baseRate = process.env.BASERATE || 44100
+const toneDuration = process.env.TONEDURATION || 0.5
 
 function generateDTMFTone(digit) {
     const [t1, t2] = DTMFfreqs[digit]
@@ -18,4 +18,4 @@ function generateSilence(duration) {
     return new Array(silence).fill(0)
 }
 
-module.exports = { generateDTMFTone, generateSilence}
+module.exports = { generateDTMFTone, generateSilence }

@@ -14,6 +14,7 @@ app.engine('hbs', exphbs.engine({ extname: '.hbs', defaultLayout: 'main'}))
 app.set('view engine', 'hbs')
 
 app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public/sounds'))
 
 const router = express.Router()
 app.router('/', (req,res)=>{
