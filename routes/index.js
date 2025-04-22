@@ -34,13 +34,11 @@ router.post('/generator', async(req,res)=>{
     }
 })
 
-router.get('/generator', (req,res)=>{
-    return res.render('generator')
-})
+router.get('/generator', (req,res) => res.render('generator'))
 
-router.get('/', (req,res)=>{
-    return res.send('Welcome to express!')
-})
+router.get('/', (req,res) => res.send('Welcome to express!'))
+
+router.get('', (req, res) => res.redirect('/generator'))
 
 
 async function generateDTMFSequence(digits){
