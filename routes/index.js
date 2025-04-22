@@ -8,7 +8,7 @@ const DTMFfreqs = require('../DTMFdata.json')
 const  { generateDTMFTone, generateSilence } = require('../utils/DTMFhandler')
 
 const baseRate = Number(process.env.BASERATE) || 44100
-const pauseDuration = Number(process.env.PAUSEDURATION) || 0.2
+const pauseDuration = Number(process.env.PAUSEDURATION) || 0.3
 
 
 // 主要邏輯:
