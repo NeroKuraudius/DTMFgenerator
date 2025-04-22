@@ -7,8 +7,8 @@ const fs = require('fs')
 const DTMFfreqs = require('../DTMFdata.json') 
 const  { generateDTMFTone, generateSilence } = require('../utils/DTMFhandler')
 
-const baseRate = process.env.BASERATE || 44100
-const pauseDuration = process.env.PAUSEDURATION || 0.1
+const baseRate = Number(process.env.BASERATE) || 44100
+const pauseDuration = Number(process.env.PAUSEDURATION) || 0.2
 
 
 // 主要邏輯:
@@ -16,7 +16,7 @@ router.post('/generator', async(req,res)=>{
     const { content } = req.body
     
     try{
-        const checkPath = `../public/sounds/${content}.wav`
+        const checkPath = __dirname + `/../public/sounds/${content}.wav`
         if (fs.existsSync(checkPath)) {
             console.log('The sounds has already existed.')
             return res.redirect(`/${content}.wav`)
@@ -54,11 +54,11 @@ async function generateDTMFSequence(digits){
     }
 
     const audioData = {
-        baseRate,
+        sampleRate: baseRate,
         channelData : [Float32Array.from(audio)]
     }
     const soundBuffer = await wavEncoder.encode(audioData)
-    const filePath = `../public/sounds/${digits}.wav`
+    const filePath = __dirname + `/../public/sounds/${digits}.wav`
     fs.writeFileSync(filePath, Buffer.from(soundBuffer))
 
     if (fs.existsSync(filePath)){

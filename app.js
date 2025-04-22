@@ -16,11 +16,6 @@ app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public/sounds'))
 
-const router = express.Router()
-app.router('/', (req,res)=>{
-    return res.send('welcome to express!')
-})
-
 app.use('/', routes)
 
 app.listen(port, ()=>{
