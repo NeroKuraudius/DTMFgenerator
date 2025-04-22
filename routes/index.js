@@ -36,8 +36,6 @@ router.post('/generator', async(req,res)=>{
 
 router.get('/generator', (req,res) => res.render('generator'))
 
-router.get('/', (req,res) => res.send('Welcome to express!'))
-
 router.get('', (req, res) => res.redirect('/generator'))
 
 
