@@ -1,20 +1,14 @@
 const express = require('express')
 const router = express.Router()
 
-const baseRate = process.env.BASERATE || 44100
-const pauseDuration = process.env.PAUSEDURATION || 0.1
-const DTMFfreqs = require('../DTMFdata.json') 
-const  { generateDTMFTone, generateSilence } = require('../utils/DTMFhandler')
 const wavEncoder = require('wav-encoder')
 const fs = require('fs')
 
-router.get('/', (req,res)=>{
-    return res.send('Welcome to express!')
-})
+const DTMFfreqs = require('../DTMFdata.json') 
+const  { generateDTMFTone, generateSilence } = require('../utils/DTMFhandler')
 
-router.get('/generator', (req,res)=>{
-    return res.render('generator')
-})
+const baseRate = process.env.BASERATE || 44100
+const pauseDuration = process.env.PAUSEDURATION || 0.1
 
 
 // 主要邏輯:
@@ -23,19 +17,33 @@ router.post('/generator', async(req,res)=>{
     
     try{
         const checkPath = `../public/sounds/${content}.wav`
-        if (fs.existsSync(checkPath)){
+        if (fs.existsSync(checkPath)) {
             console.log('The sounds has already existed.')
-            return res.redirect(`${content}.wav`)
+            return res.redirect(`/${content}.wav`)
         }
 
-        const generator = await generateDTMFSequence(DTMFfreqs, content)
-        
+        const generator = await generateDTMFSequence(content)
+        if (generator){
+            return res.redirect(`/${content}.wav`)
+        } else {
+            console.error(`Failed to redirect /${content}.wav`)
+            return res.render('generator')
+        }
     }catch(err){
         console.error('Error occupied on POST: /generator', err)
     }
 })
 
-async function generateDTMFSequence(digits, filename){
+router.get('/generator', (req,res)=>{
+    return res.render('generator')
+})
+
+router.get('/', (req,res)=>{
+    return res.send('Welcome to express!')
+})
+
+
+async function generateDTMFSequence(digits){
     let audio = []
 
     for (const digit of digits){
@@ -50,8 +58,9 @@ async function generateDTMFSequence(digits, filename){
         channelData : [Float32Array.from(audio)]
     }
     const soundBuffer = await wavEncoder.encode(audioData)
-    const filePath = `../public/sounds/${filename}.wav`
+    const filePath = `../public/sounds/${digits}.wav`
     fs.writeFileSync(filePath, Buffer.from(soundBuffer))
+
     if (fs.existsSync(filePath)){
         console.log('Sound file saved sucessfully!')
         return 1
