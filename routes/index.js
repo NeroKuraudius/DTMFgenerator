@@ -30,7 +30,7 @@ router.post('/generator', async(req,res)=>{
             return res.render('generator')
         }
     }catch(err){
-        console.error('Error occupied on POST: /generator', err)
+        console.error('Error occupied on POST: /generator', err.response?.data)
     }
 })
 
